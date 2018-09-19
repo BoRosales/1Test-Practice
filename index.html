@@ -16,13 +16,37 @@
   <body>
     
     <div id="container">
-      <div>
-        <nav class="navbar sticky-top navbar-light" style="background-color: #372581;">
-          <a class="navbar-brand" href="#">
-              <img src="assets/images/11.JPG">
-          </a>
-        </nav>
-      </div>
+            <div>
+                    <nav class="navbar sticky-top navbar-light" style="background-color: #372581;">
+                      <a class="navbar-brand" href="#">
+                          <img src="assets/images/11.JPG">
+                      </a>
+                    </nav>
+                  </div>
+                  
+                  <form class="flight-search-form">
+                    <div class="trip-type-selection">
+                      <button class="trip-type" type="button" data-type="round-trip">
+                        Round Trip
+                      </button>
+                      <button class="trip-type" type="button" data-type="one-way">
+                        One Way
+                      </button>
+                    </div>
+                    <div class="form-row">
+                      <div class="trip-row">
+                        <label class="input-label location-from-input">
+                          <span class="input-text"></span>
+                          <input class="src-input" placeholder="Where are you" value="" type="text" />
+                        </label>
+                                    
+                        <label class="input-label location-from-input">
+                          <span class="input-text"></span>
+                          <input class="dest-input" placeholder="Where ya goin" value="" type="text" />
+                        </label>
+                      </div>
+                    </div>
+                  </form>
     </div>
     
     
