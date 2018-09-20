@@ -1,50 +1,24 @@
-var calendar_from = new SalsaCalendar({
-    inputId: 'checkin',
-    lang: 'en',
-    range: {
-      min: 'today'
-    },
-    calendarPosition: 'right',
-    fixed: false,
-    connectCalendar: true
+$(document).ready(function(){
+
+    let minDate = new Date();
+
+    $('#depart').datepicker({
+        showAnim: 'drop',
+        numberOfMonth: 2,
+        minDate: minDate,
+        dateFormat: 'mm/dd/yy',
+        onClose: function(selectedDate){
+            $('#return').datepicker('option', 'minDate', 'selectedDate');
+        }
+});
+    $('#return').datepicker({
+        showAnim: 'drop',
+        numberOfMonth: 2,
+        dateFormat: 'mm/dd/yy',
+        onClose: function(selectedDate){
+            $('#depart').datepicker('option', 'minDate', 'selectedDate');
+    }
 });
 
-var calendar_to = new SalsaCalendar({
-    inputId: 'checkout',
-    lang: 'en',
-    range: {
-      min: 'today'
-    },
-    calendarPosition: 'right',
-    fixed: false
-});
-new SalsaCalendar.Connector({
-    from: calendar_from,
-    to: calendar_to,
-    maximumInterval: 21,
-    minimumInterval: 1
-  });
 
-new SalsaCalendar.NightsCalculator({
-  from: calendar_from,
-  to: calendar_to,
-  nightsNo: 'nights-no'
 });
-{
-    lang: 'en',
-    yearsNavigation: false,
-    range: {
-      min: false,
-      max: false,
-      weekdays: false,
-      closing_dates: false
-    },
-    minDate: false,
-    allowEmptyDate: false,
-    inputReadOnly: false,
-    showNextMonth: false,
-    onSelect = function(input) {},
-    calendarPosition: 'bottom',
-    fixed: false,
-    dateFormats: {}
-  }

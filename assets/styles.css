@@ -3,3 +3,12 @@ body{
     background-repeat: no-repeat;
     background-size: 100% 70%;
   }
+
+form{
+    width: 70%;
+    margin: 100px auto;
+}
+
+button{
+    margin: 10px;
+}
