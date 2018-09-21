@@ -12,3 +12,15 @@ form{
 button{
     margin: 10px;
 }
+
+#googleMap {
+    width: 50%;
+    height: 50%;
+    margin: 10px auto;
+}
+
+/*output box*/
+#output {
+    text-align: center;
+    margin: 20px auto;
+}
