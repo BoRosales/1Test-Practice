@@ -1,4 +1,4 @@
-$(document).ready(function(){
+
 //---Global Variables---
 
 //---Input Variables---
@@ -12,15 +12,6 @@ var endLocationLat;
 var endLocationLng;
 var startLocationLat;
 var startLocationLng;
-
-
-//---Round Trip & One Way Button---
-$('.one-way-button').on('click', function(){
-    $('#return').hide();
-    });
-$('.round-trip-button').on('click', function(){
-    $('#return').show();
-});
 
 //---MAP SCRIPT---
 //set options
@@ -84,8 +75,6 @@ var options = {
     types: ['(cities)']
 }
 
-
-
 //---------FUNCTIONS-----------------
 
     // DATE SCRIPT
@@ -103,9 +92,20 @@ var options = {
     $('#return').datepicker({
         showAnim: 'drop',
         numberOfMonth: 1,
+        minDate: minDate,
         dateFormat: 'mm/dd/yy',
         onClose: function (selectedDate) {
             $('#depart').datepicker('option', 'minDate', 'selectedDate');
         }
     }); 
+
+    //---Round Trip & One Way Button---
+$('.one-way-button').on('click', function(){
+    $('#return').toggle(500);
+    });
+$('.round-trip-button').on('click', function(){
+    $('#return').show(500);
+});
+$('#searchAround').on('click', function(){
+    $('#searchForm').trigger("reset");
 });
