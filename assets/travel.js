@@ -1,3 +1,4 @@
+$(document).ready(function(){
 //---Global Variables---
 
 //---Input Variables---
@@ -83,8 +84,9 @@ var options = {
     types: ['(cities)']
 }
 
+
+
 //---------FUNCTIONS-----------------
-let date = function () {
 
     // DATE SCRIPT
     let minDate = new Date();
@@ -106,5 +108,4 @@ let date = function () {
             $('#depart').datepicker('option', 'minDate', 'selectedDate');
         }
     }); 
-    console.log(selectedDate);
-};
+});
