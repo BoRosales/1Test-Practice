@@ -1,0 +1,27 @@
+body{
+    background-image: url('../assets/images/travelbackground.JPG');
+    background-repeat: no-repeat;
+    background-size: 100% 70%;
+  }
+
+form{
+    width: 70%;
+    margin: 100px auto;
+}
+
+button{
+    margin: 10px;
+}
+
+#map {
+    width: 50%;
+    height: 50%;
+    margin: 10px auto;
+}
+
+/*Driving time and distance box*/
+#output {
+    text-align: center;
+    margin: 20px auto;
+}
+
