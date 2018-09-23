@@ -21,6 +21,7 @@
 </head>
 
 <!--DOM-->
+
 <body>
 
     <div id="container">
@@ -28,7 +29,7 @@
         <div>
             <nav class="navbar sticky-top navbar-light" style="background-color: #372581;">
                 <a class="navbar-brand" href="#">
-                    <img src="Images/11.JPG">
+                    <img src="assets/images/11.JPG">
                 </a>
             </nav>
         </div>
@@ -49,19 +50,19 @@
                 <div class="trip-row">
                     <input type="text" id="origin" placeholder="Where ya starting">
                     <input type="text" id="destination" placeholder="Where ya goin">
-                    <input type="text" id="depart" placeholder="Depart">
-                    <input type="text" id="return" placeholder="Return">
+                    <input type="date" id="depart" placeholder="Depart">
+                    <input type="date" id="return" placeholder="Return">
                 </div>
             </div>
         </form>
 
         <!-- Search button (must be outside of form and in it's own div) -->
         <div>
-            <button id="searchAround" onclick="calcRoute();">Search Around</button>
+            <button id="searchAround">Search Around</button>
         </div>
 
         <!-- Map Div -->
-        <div id="googleMap"></div>
+        <div id="map"></div>
 
         <!-- Trip Results Div -->
         <div id="output"></div>
@@ -71,6 +72,7 @@
     <!-- Scripts for APIS -->
     <!-- GOOGLE MAPS PLACES (distance between cites, lat/long, autocomplete form fields) -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBfd54qyD2BoEk1fzXahImKNPT_KTW4SA&libraries=places"></script>
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBfd54qyD2BoEk1fzXahImKNPT_KTW4SA&libraries=places"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="assets/travel.js"></script>
 </body>
