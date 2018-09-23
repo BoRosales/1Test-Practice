@@ -189,10 +189,26 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
       var m = (next - olddist) / (dist - olddist);
       points.push(new google.maps.LatLng(p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m));
       next += miles;
-      /////////HHHEEEEEERRRRRRRRREEEEEE   ARE THE LAT/ LONG COORDINATES YOU NEED FOR THE GAS API
+      /////////HHHEEEEEERRRRRRRRREEEEEE ARE THE LAT/ LONG COORDINATES YOU NEED FOR THE GAS API
       console.log (p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m)
     }
   }
+
+// myGasFeed API
+var gasLat = p1.lat() + (p2.lat() - p1.lat()) * m//30.2672; // will call from google
+var gasLng =  p1.lng() + (p2.lng() - p1.lng()) * m //-97.7431; // will call from google
+var queryURL = "http:/api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
+
+
+$.get(queryURL).then( data => {
+   console.log(JSON.stringify(data));
+   $(".gasStuff").append("<tr><td>" + data.stations[0].station + "</td><td>" + "$" + data.stations[0].reg_price + "</td><td>" + data.stations[0].address + "</td><td>" + data.stations[0].city + "," + data.stations[0].region + "</td><td>" + data.stations[0].distance + "</td></tr>")
+   //$("#info").text(JSON.stringify(data.stations[0].reg_price));
+   //console.log("country" + data.stations.zip);
+   console.log ("Gas Lat = " + gasLat)
+});
+
+
   return points;
 }
 
@@ -206,3 +222,19 @@ var autocomplete1 = new google.maps.places.Autocomplete(input1, options);
 
 var input2 = document.getElementById("destination");
 var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
+
+
+// // myGasFeed API
+// var gasLat = 30.2672; // will call from google
+// var gasLng = -97.7431; // will call from google
+// var queryURL = "http:/api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
+
+
+// $.get(queryURL).then( data => {
+//    console.log(JSON.stringify(data));
+//    $(".gasStuff").append("<tr><td>" + data.stations[0].station + "</td><td>" + "$" + data.stations[0].reg_price + "</td><td>" + data.stations[0].address + "</td><td>" + data.stations[0].distance + "</td></tr>")
+//    //$("#info").text(JSON.stringify(data.stations[0].reg_price));
+//    //console.log("country" + data.stations.zip);
+// });
+
+
