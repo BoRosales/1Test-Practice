@@ -31,61 +31,15 @@ var polyline = null;
 var gmarkers = [];
 var infowindow = new google.maps.InfoWindow();
 
-
-
-  //    // Note: This example requires that you consent to location sharing when
-  //    // prompted by your browser. If you see the error "The Geolocation service
-  //    // failed.", it means you probably did not give permission for the browser to
-  //    // locate you.
-  //    var map, infoWindow;
-  //    function initMap() {
-  //      map = new google.maps.Map(document.getElementById('map'), {
-  //        center: {lat: -34.397, lng: 150.644},
-  //        zoom: 6
-  //      });
-  //      infoWindow = new google.maps.InfoWindow;
-
-  //      // Try HTML5 geolocation.
-  //      if (navigator.geolocation) {
-  //        navigator.geolocation.getCurrentPosition(function(position) {
-  //          var pos = {
-  //            lat: position.coords.latitude,
-  //            lng: position.coords.longitude
-  //          };
-
-  //          infoWindow.setPosition(pos);
-  //          infoWindow.setContent('Location found.');
-  //          infoWindow.open(map);
-  //          map.setCenter(pos);
-  //        }, function() {
-  //          handleLocationError(true, infoWindow, map.getCenter());
-  //        });
-  //      } else {
-  //        // Browser doesn't support Geolocation
-  //        handleLocationError(false, infoWindow, map.getCenter());
-  //      }
-  //    }
-
-  //    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  //      infoWindow.setPosition(pos);
-  //      infoWindow.setContent(browserHasGeolocation ?
-  //                            'Error: The Geolocation service failed.' :
-  //                            'Error: Your browser doesn\'t support geolocation.');
-  //      infoWindow.open(map);
-  //    }
-  //  </script>
-
-
-
 // INITIALIZE MAP AND SET OPTIONS
 function initMap() {
   var directionsService = new google.maps.DirectionsService;
   var directionsDisplay = new google.maps.DirectionsRenderer;
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 7,
-    center: { // Set to Australia
-      lat: -34.397,
-      lng: 150.644
+    center: { // Set to Austin
+      lat: 30.2672,
+      lng: -97.7431
     }
   });
   //Create and control polyline
@@ -156,13 +110,13 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
           gmarkers[i].setMap(null);
         }
         gmarkers = [];
-        /////////////////////////////  THIS IS WHERE WE SET DISTANCE BETWEEN POINTS, not sure that 200000 is really 200 miles
-        var points = polyline.GetPointsAtDistance(200000);
+        //321100 = about 200 miles
+        var points = polyline.GetPointsAtDistance(321100);
         for (var i = 0; i < points.length; i++) {
           var marker = new google.maps.Marker({
             map: map,
             position: points[i],
-            title: i * 200 + 200 + " miles"
+            title: i*200 + 200 + " miles"
           });
           marker.addListener('click', openInfoWindow);
         }
@@ -210,7 +164,7 @@ function getMarkerImage(iconColor) {
   return icons[iconColor];
 
 }
-// SHOW LAT/ LONG AND DISTANCE FROM ORIGION FOR EACH 200 MI POINT
+// SHOW LAT/ LONG AND DISTANCE FROM ORIGIN FOR EACH 200 MI POINT
 function openInfoWindow() {
   var contentString = this.getTitle() + "<br>" + this.getPosition().toUrlValue(6);
   infowindow.setContent(contentString);
@@ -235,6 +189,8 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
       var m = (next - olddist) / (dist - olddist);
       points.push(new google.maps.LatLng(p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m));
       next += miles;
+      /////////HHHEEEEEERRRRRRRRREEEEEE   ARE THE LAT/ LONG COORDINATES YOU NEED FOR THE GAS API
+      console.log (p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m)
     }
   }
   return points;
