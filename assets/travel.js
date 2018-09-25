@@ -3,19 +3,20 @@
 
   $('#depart').datepicker({
       showAnim: 'drop',
-      numberOfMonth: 2,
+      numberOfMonth: 1,
       minDate: minDate,
       dateFormat: 'mm/dd/yy',
       onClose: function(selectedDate){
-          $('#return').datepicker('option', 'minDate', 'selectedDate');
+          $('#return').datepicker('option', 'minDate', selectedDate);
       }
 });
   $('#return').datepicker({
       showAnim: 'drop',
-      numberOfMonth: 2,
+      numberOfMonth: 1,
+      minDate: new Date,
       dateFormat: 'mm/dd/yy',
       onClose: function(selectedDate){
-          $('#depart').datepicker('option', 'minDate', 'selectedDate');
+          $('#depart').datepicker('option', 'minDate', selectedDate);
   }
 });
 
@@ -195,8 +196,8 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
   }
 
 // myGasFeed API
-var gasLat = p1.lat() + (p2.lat() - p1.lat()) * m//30.2672; // will call from google
-var gasLng =  p1.lng() + (p2.lng() - p1.lng()) * m //-97.7431; // will call from google
+var gasLat = p1.lat() + (p2.lat() - p1.lat()) * m;//30.2672; // will call from google
+var gasLng =  p1.lng() + (p2.lng() - p1.lng()) * m; //-97.7431; // will call from google
 var queryURL = "http:/api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
 
 
