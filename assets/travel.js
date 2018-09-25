@@ -1,38 +1,33 @@
-// Long and Lat global variables 
+//---Call mygasFeed---
+var gasLat = 30.2672; // will call from google
+var gasLng = -97.7431; // will call from google
+var queryURL = "http:/api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
+
+
+$.get(queryURL).then( data => {
+    console.log(JSON.stringify(data));
+    $(".gasStuff").append("<tr><td>" + data.stations[0].station + "</td><td>" + "$" + data.stations[0].reg_price + "</td><td>" + data.stations[0].address + "</td><td>" + data.stations[0].distance + "</td></tr>")
+    //$("#info").text(JSON.stringify(data.stations[0].reg_price));
+    //console.log("country" + data.stations.zip);
+});
+//---Input Variables---
+var input1 = document.getElementById("origin");
+var autocomplete1 = new google.maps.places.Autocomplete(input1, options);
+var input2 = document.getElementById("destination");
+var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
+
+//---Long and Lat global variables---
 var endLocationLat;
 var endLocationLng;
 var startLocationLat;
 var startLocationLng;
 
-
-$(document).ready(function () {
-
-    // DATE SCRIPT
-    let minDate = new Date();
-
-    $('#depart').datepicker({
-        showAnim: 'drop',
-        numberOfMonth: 2,
-        minDate: minDate,
-        dateFormat: 'mm/dd/yy',
-        onClose: function (selectedDate) {
-            $('#return').datepicker('option', 'minDate', 'selectedDate');
-        }
-    });
-    $('#return').datepicker({
-        showAnim: 'drop',
-        numberOfMonth: 2,
-        dateFormat: 'mm/dd/yy',
-        onClose: function (selectedDate) {
-            $('#depart').datepicker('option', 'minDate', 'selectedDate');
-        }
-    });
-
-});
-
-//MAP SCRIPT
+//---MAP SCRIPT---
 //set options
-var myLatLng = { lat: 30.2672, lng: -97.7431 }; // Set to Austin, could set to user's location
+var myLatLng = {
+    lat: 30.2672,
+    lng: -97.7431
+}; // Set to Austin, could set to user's location
 var mapOptions = {
     center: myLatLng,
     zoom: 7,
@@ -48,7 +43,6 @@ var directionsDisplay = new google.maps.DirectionsRenderer();
 
 directionsDisplay.setMap(map);
 
-
 //Calculate route function
 function calcRoute() {
     var request = {
@@ -62,7 +56,7 @@ function calcRoute() {
     //Pass request to route method
     directionsService.route(request, function (result, status) {
         if (status == google.maps.DirectionsStatus.OK) {
-
+            console.log(result.routes[0].legs[0].distance);
             //Get distance, time, and lat/ long.  Display distance and time in DOM
             $("#output").html("<div class='alert-info'>From: " + document.getElementById("origin").value + ".<br />To: " + document.getElementById("destination").value + ".<br /> Driving distance: " + result.routes[0].legs[0].distance.text + ".<br />Duration: " + result.routes[0].legs[0].duration.text + ".</div>");
             endLocationLat = result.routes[0].legs[0].end_location.lat();
@@ -78,7 +72,9 @@ function calcRoute() {
             directionsDisplay.setDirections(result);
         } else {
             //Delete route from map
-            directionsDisplay.setDirections({ routes: [] });
+            directionsDisplay.setDirections({
+                routes: []
+            });
             //Center map in Austin (could center to user)
             map.setCenter(myLatLng);
             //show error message
@@ -93,8 +89,34 @@ var options = {
     types: ['(cities)']
 }
 
-var input1 = document.getElementById("origin");
-var autocomplete1 = new google.maps.places.Autocomplete(input1, options);
+//---------FUNCTIONS-----------------
 
-var input2 = document.getElementById("destination");
-var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
+// DATE SCRIPT
+let minDate = new Date();
+
+$('#depart').datepicker({
+    showAnim: 'drop',
+    numberOfMonth: 1,
+    minDate: minDate,
+    dateFormat: 'mm/dd/yy',
+    onClose: function (selectedDate) {
+        $('#return').datepicker('option', 'minDate', 'selectedDate');
+    }
+});
+$('#return').datepicker({
+    showAnim: 'drop',
+    numberOfMonth: 1,
+    minDate: minDate,
+    dateFormat: 'mm/dd/yy',
+    onClose: function (selectedDate) {
+        $('#depart').datepicker('option', 'minDate', 'selectedDate');
+    }
+});
+
+//---Round Trip & One Way Button---
+$('.one-way-button').on('click', function () {
+    $('#return').toggle(500);
+});
+$('.round-trip-button').on('click', function () {
+    $('#return').show(500);
+});
