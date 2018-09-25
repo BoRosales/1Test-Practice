@@ -3,22 +3,10 @@
 <head>
 
     <title>Trip Around</title>
- dev-2
 
     <!--Bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
-
-
-    <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
-
-    <!--Jquery -- Date Picker & Date Picker UI-->
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-Develop
 
     <!--Firebase-->
 
@@ -28,6 +16,7 @@ Develop
 </head>
 
 <!--DOM-->
+
 <body>
 
     <div id="container">
@@ -35,22 +24,18 @@ Develop
         <div>
             <nav class="navbar sticky-top navbar-light" style="background-color: #372581;">
                 <a class="navbar-brand" href="#">
- dev-2
-                    <img src="assets/images/11.JPG" alt="logo-image11.jpg">
-
-                    <img src="Images/11.JPG">
-Develop
+                    <img src="assets/images/11.JPG">
                 </a>
             </nav>
         </div>
 
         <!--Round trip or One way buttons-->
-        <form id="searchForm" action="" method="post">
+        <form action="" method="post">
             <div class="trip-type-selection">
-                <button class="trip-type round-trip-button" type="button" data-type="round-trip">
+                <button class="trip-type" type="button" data-type="round-trip">
                     Round Trip
                 </button>
-                <button class="trip-type one-way-button" type="button" data-type="one-way">
+                <button class="trip-type" type="button" data-type="one-way">
                     One Way
                 </button>
             </div>
@@ -68,42 +53,49 @@ Develop
 
         <!-- Search button (must be outside of form and in it's own div) -->
         <div>
-            <button id="searchAround" onclick="calcRoute();">Search Around</button>
+            <button id="searchAround">Search Around</button>
         </div>
- dev-2
 
         <!-- Map Div -->
-        <div id="googleMap"></div>
+        <div id="map"></div>
 
         <!-- Trip Results Div -->
         <div id="output"></div>
 
+        <!-- Gas Search Div -->
+        <div id="info">
+            <table class="table table-dark" style="background-color: #372581">
+                <thead>
+                    <tr>
+                        <th scope="col">Station Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Street Address</th>
+                        <th scope="col">City, State</th>
+                        <th scope="col">Distance</th>
+                    </tr>
+                </thead>
+                <tbody class="gasStuff">
+
+                </tbody>
+            </table>
+        </div>
+
+
+
     </div>
 
 
-
-        <!-- Map Div -->
-        <div id="googleMap"></div>
-
-        <!-- Trip Results Div -->
-        <div id="output"></div>
-
-    </div>
-
-Develop
     <!-- Scripts for APIS -->
     <!-- GOOGLE MAPS PLACES (distance between cites, lat/long, autocomplete form fields) -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBfd54qyD2BoEk1fzXahImKNPT_KTW4SA&libraries=places"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
- dev-2
-    
-        <!--Jquery -- Date Picker & Date Picker UI-->
-        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script type="text/javascript" src="assets/travel.js"></script>
+
+    <!--Jquery -- Date Picker & Date Picker UI-->
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script src="assets/travel.js"></script>
-Develop
 </body>
 
 </html>

@@ -13,14 +13,15 @@ button{
     margin: 10px;
 }
 
-#googleMap {
+#map {
     width: 50%;
     height: 50%;
     margin: 10px auto;
 }
 
-/*output box*/
+/*Driving time and distance box*/
 #output {
     text-align: center;
     margin: 20px auto;
 }
+
