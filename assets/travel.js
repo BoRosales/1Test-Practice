@@ -54,7 +54,7 @@ function initMap() {
   var onChangeHandler = function () {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
     //THIS IS WHERE WE PUT THE FUNCTION TO DISPLAY THE FLIGHTS
-    displayAirInfo(); 
+    displayAirInfo();
   };
   document.getElementById('searchAround').addEventListener('click', onChangeHandler);
 }
@@ -214,7 +214,7 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
 
     ///////////////////////////////////
 
-    $("#gasStationsCard").html("<div class='alert-info2'>200 MILES" + "<br />Regular $" + data.stations[0].reg_price + "<br />" + data.stations[0].station + "<br />" + data.stations[0].address + "<br />" + data.stations[0].city + "," + data.stations[0].region + "</div>");
+    $("#gasStationsCard").html("<div class='alert-info'>200 MILES" + "<br />Regular $" + data.stations[0].reg_price + "<br />" + data.stations[0].station + "<br />" + data.stations[0].address + "<br />" + data.stations[0].city + "," + data.stations[0].region + "</div>");
 
 
 
@@ -272,34 +272,69 @@ var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
 // var airURL = "https://api.skypicker.com/flights?curr=USD&flyFrom=Boston&to=Austin&dateFrom=24/11/2018&dateTo=24/12/2018&partner=picky";
 
 
-function displayAirInfo () {
-var originCity = document.getElementById("origin").value; 
-var destinationCity = document.getElementById("destination").value; // #destination
-var dateFrom = document.getElementById("depart").value;  
-// var dateTo = document.getElementById("return").value; 
+function displayAirInfo() {
+  var originCity = document.getElementById("origin").value;
+  var destinationCity = document.getElementById("destination").value; // #destination
+  var dateFrom = document.getElementById("depart").value;
+  // var dateTo = document.getElementById("return").value; 
+  // returns "value" of null
+  // var americanDateFormat = document.getElementById('#depart').datepicker(dateFormat: "mm/dd/yy").value;
+  // var americanDateFormat= DateTime dt = DateTime.Parse("depart", CultureInfo.GetCultureInfo("en-us"));
+  // var DateTime = DateTime.Parse("depart", CultureInfo.GetCultureInfo("en-gb"));
+  // function parseDMY(dateFrom) {
+  //   var date = dateFrom.split("/");
+  //   var d = parseInt(date[0], 10),
+  //       m = parseInt(date[1], 10),
+  //       y = parseInt(date[2], 10);
+  //   return new Date(y, m - 1, d);
+  // }
 
-const airURL = "https://api.skypicker.com/flights?curr=USD&typeFlight=round&flyFrom=" + originCity + "&to=" + destinationCity + "&dateFrom=" + dateFrom + "&dateTo=" + dateFrom + "&partner=picky";
+// let americanDateFormat = parseDMY(dateFrom);
 
-// return airURL;
-$.get(airURL).then(response => {
+
+// let americanDateFormat = moment(dateFrom.toString()).format("MM/DD/YYYY");
+
+// let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MM/DD/YYYY");
+let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MMMM Do, YYYY");
+
+
+  const airURL = "https://api.skypicker.com/flights?curr=USD&typeFlight=round&flyFrom=" + originCity + "&to=" + destinationCity + "&dateFrom=" + dateFrom + "&dateTo=" + dateFrom + "&partner=picky";
+
+  // return airURL;
+  $.get(airURL).then(response => {
+
+
+
+    ////////////////////////////////////////////////
+    $("#flightResultsCard").html("<div class='alert-info'>Flight Results:" + "<br />Origin Airport:" + originCity + "<br />Destination Airport" + destinationCity + "<br />Departure Date:" + americanDateFormat + "<br /><br /> FIRST FLIGHT:<br />Flight price: USD $" + response.data[0].price + "<br />Travel Time: " + response.data[0].fly_duration + "<br />Airline: " + response.data[0].airlines + "<br /><br />SECOND FLIGHT:<br />Flight price: USD $" + response.data[1].price + "<br />Travel Time: " + response.data[1].fly_duration + "<br />Airline: " + response.data[1].airlines + "<br /> THIRD FLIGHT:<br /><br />Flight price: USD $" + response.data[2].price + "<br />Travel Time: " + response.data[2].fly_duration + "<br />Airline: " + response.data[2].airlines + "</div>");
+
+    ////////////////////////////////////////////////////////
+
+
+    // /////////////////////////////////////////////
+    // console.log("Function:" + parseDMY(dateFrom));
+    console.log("American Date:" + americanDateFormat);
+    console.log("Routes: " + response.data[0].routes);
+    console.log("Transfers: " + response.data[0].transfers);
+    console.log("Fly from: " + response.data[0].flyFrom);
+    console.log("Fly to: " + response.data[0].flyTo);
+    console.log("From: " + originCity);
+    console.log("To: " + destinationCity);
+    console.log("Departure Date:  " + dateFrom);
+    // First flight
+    console.log("Flight price: USD $" + response.data[0].price);
+    console.log("Travel Time: " + response.data[0].fly_duration);
+    console.log("Airline: " + response.data[0].airlines);
+    //Second flight
+    console.log("Flight price: USD $" + response.data[1].price);
+    console.log("Travel Time: " + response.data[1].fly_duration);
+    console.log("Airline: " + response.data[1].airlines);
+    //Third flight
+    console.log("Flight price: USD $" + response.data[2].price);
+    console.log("Travel Time: " + response.data[2].fly_duration);
+    console.log("Airline: " + response.data[2].airlines);
   
-  console.log("From: " + originCity);
-  console.log("To: " + destinationCity);
-  console.log("Departure Date:  " + dateFrom);
-  // First flight
-  console.log("Flight price: USD $" + response.data[0].price);
-  console.log("Travel Time: " + response.data[0].fly_duration);
-  console.log("Airline: ", response.data[0].airlines);
-  //Second flight
-  console.log("Flight price: USD $" + response.data[1].price);
-  console.log("Travel Time: " + response.data[1].fly_duration);
-  console.log("Airline: ", response.data[1].airlines);
-  //Third flight
-  console.log("Flight price: USD $" + response.data[2].price);
-  console.log("Travel Time: " + response.data[2].fly_duration);
-  console.log("Airline: ", response.data[2].airlines);
-
-});
+  });
 }
 
 
