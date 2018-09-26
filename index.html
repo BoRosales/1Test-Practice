@@ -31,39 +31,42 @@
 
         <!--Round trip or One way buttons-->
         <form action="" method="post">
-            <div class="trip-type-selection">
+            <!-- <div class="trip-type-selection">
                 <button class="trip-type" type="button" data-type="round-trip">
                     Round Trip
                 </button>
                 <button class="trip-type" type="button" data-type="one-way">
                     One Way
-                </button>
-            </div>
+                </button> -->
+    </div>
 
-            <!--Origin and Desination inputs-->
-            <div class="form-row">
-                <div class="trip-row">
-                    <input type="text" id="origin" placeholder="Where ya starting">
-                    <input type="text" id="destination" placeholder="Where ya goin">
-                    <input type="text" id="depart" placeholder="Depart">
-                    <input type="text" id="return" placeholder="Return">
-                </div>
-            </div>
-        </form>
-
-        <!-- Search button (must be outside of form and in it's own div) -->
-        <div>
-            <button id="searchAround">Search Around</button>
+    <!--Origin and Desination inputs-->
+    <div class="form-row">
+        <div class="trip-row">
+            <input type="text" id="origin" placeholder="Where ya starting">
+            <input type="text" id="destination" placeholder="Where ya goin">
+            <input type="text" id="depart" placeholder="Depart">
+            <!-- <input type="text" id="return" placeholder="Return"> -->
         </div>
+    </div>
+    </form>
 
-        <!-- Map Div -->
-        <div id="map"></div>
+    <!-- Search button (must be outside of form and in it's own div) -->
+    <div>
+        <button id="searchAround">Search Around</button>
+    </div>
 
-        <!-- Trip Results Div -->
-        <div id="output"></div>
+    <!-- Map Div -->
+    <div id="map"></div>
 
-        <!-- Gas Search Div -->
-        <div id="info">
+    <!-- Driving Time and Distance Results Div -->
+    <div id="drivingCard"></div>
+
+    <!-- Gas Stations Div -->
+    <div id="gasStationsCard"></div>
+
+    <!-- Gas Search Card -->
+    <!-- <div id="info">
             <table class="table table-dark" style="background-color: #372581">
                 <thead>
                     <tr>
@@ -78,8 +81,44 @@
 
                 </tbody>
             </table>
+        </div> -->
+
+
+    <!-- This card will initially be made up of a card and wells for each of the articles retrieved -->
+    <div class="card">
+
+        <!-- card Heading for the retrieved articles box -->
+        <div class="card-header">
+            <strong>
+                <i class="fa fa-table"></i>Gas Stops</strong>
         </div>
 
+        <!-- This main card will hold each of the resulting articles -->
+        <div class="card-body" id="gasStopCards">
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+
+    <!-- Gas Search Div -->
+    <!-- <div id="info">
+            <table class="table table-dark" style="background-color: #20cc3c">
+                <thead>
+                    <tr>
+                        <th scope="col">Flight Length</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Street Address</th>
+                        <th scope="col">City, State</th>
+                        <th scope="col">Distance</th>
+                    </tr>
+                </thead>
+                <tbody class="airStuff">
+
+                </tbody>
+            </table>
+        </div> -->
 
 
     </div>
