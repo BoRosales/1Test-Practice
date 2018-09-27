@@ -201,9 +201,15 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
   // myGasFeed API  WORKING CODE
   var gasLat = p1.lat() + (p2.lat() - p1.lat()) * m;//30.2672; // will call from google
   var gasLng = p1.lng() + (p2.lng() - p1.lng()) * m; //-97.7431; // will call from google
-  var gasURL = "http:/api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
+  var gasURL = "http://api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
+console.log(gasLat);
+console.log(gasLng);
+
+  console.log(gasURL);
 
 
+  // var gasURL = "http:/api.mygasfeed.com/stations/radius/30.2672/-97.7431/5/reg/price/esmbi7wobr.json?";
+  
   $.get(gasURL).then(data => {
     //  console.log(JSON.stringify(data));
     // console.log(data);
@@ -297,12 +303,16 @@ function displayAirInfo() {
 // let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MM/DD/YYYY");
 let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MMMM Do, YYYY");
 
+console.log(dateFrom);
+
 
   const airURL = "https://api.skypicker.com/flights?curr=USD&typeFlight=round&flyFrom=" + originCity + "&to=" + destinationCity + "&dateFrom=" + dateFrom + "&dateTo=" + dateFrom + "&partner=picky";
 
+  console.log(airURL); 
+
   // return airURL;
   $.get(airURL).then(response => {
-
+console.log("I am in air Url",response)
 
 
     ////////////////////////////////////////////////
