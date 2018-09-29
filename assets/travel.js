@@ -92,9 +92,9 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         //Display distance and time in DOM
         $("#drivingCard").html("<div class='info'>Startin' : " + document.getElementById("origin").value
           + "<br>Goin' : " + document.getElementById("destination").value
-          + "<br> Driving distance: " + response.routes[0].legs[0].distance.text
-          + "<br>Travel Time: " + response.routes[0].legs[0].duration.text
-          + "<br>Trip Cost: $" + finalCost + "<br></div>");
+          + "<br>Distance: " + response.routes[0].legs[0].distance.text
+          + "<br>Time: " + response.routes[0].legs[0].duration.text
+          + "<br>Cost: $" + finalCost + "<br></div>");
 
         for (i = 0; i < legs.length; i++) {
           if (i == 0) {
