@@ -1,4 +1,5 @@
 let minDate = new Date();
+let airlineCodesJson = [];
 
 $('#depart').datepicker({
   showAnim: 'drop',
@@ -9,6 +10,8 @@ $('#depart').datepicker({
     $('#depart').datepicker('option', 'minDate', selectedDate);
   }
 });
+
+// To use for return trips (Phase 2)
 // $('#return').datepicker({
 //   showAnim: 'drop',
 //   numberOfMonth: 1,
@@ -53,7 +56,7 @@ function initMap() {
   calculateAndDisplayRoute(directionsService, directionsDisplay);
   var onChangeHandler = function () {
     calculateAndDisplayRoute(directionsService, directionsDisplay);
-    //THIS IS WHERE WE PUT THE FUNCTION TO DISPLAY THE FLIGHTS
+    $('.spinner').removeClass('hidden');
     displayAirInfo();
   };
   document.getElementById('searchAround').addEventListener('click', onChangeHandler);
@@ -75,25 +78,28 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsDisplay.setDirections(response);
         var route = response.routes[0];
         var path = response.routes[0].overview_path;
-        // console.log("overview path lat/ long coordinates: "+ response.routes[0].overview_path);
         var legs = response.routes[0].legs;
+        var totalDistance = response.routes[0].legs[0].distance.value;
+        var meters = 1609;
+        var convert = totalDistance / meters;
+        // console.log(convert);
+        var mpg = 25;
+        var avgCost = 2.85;
+        var neededGas = convert / mpg;
+        var totalCost = neededGas * avgCost;
+        var finalCost = (Math.round(totalCost * 100) / 100);
+
         //Display distance and time in DOM
-        $("#drivingCard").html("<div class='alert-info'>From: " + document.getElementById("origin").value + ".<br />To: " + document.getElementById("destination").value + ".<br /> Driving distance: " + response.routes[0].legs[0].distance.text + ".<br />Duration: " + response.routes[0].legs[0].duration.text + ".</div>");
-        // startLocationLat = response.routes[0].legs[0].start_location.lat();
-        // startLocationLng = response.routes[0].legs[0].start_location.lng();
-        // endLocationLat = response.routes[0].legs[0].end_location.lat();
-        // endLocationLng = response.routes[0].legs[0].end_location.lng();
-        // console.log("Origin Latitude: " + startLocationLat);
-        // console.log("Origin Longitude: " + startLocationLng);
-        // console.log("Destination Latitude: " + endLocationLat);
-        // console.log("Destination Longitude: " + endLocationLng);
+        $("#drivingCard").html("<div class='info'>Startin' : " + document.getElementById("origin").value
+          + "<br>Goin' : " + document.getElementById("destination").value
+          + "<br> Driving distance: " + response.routes[0].legs[0].distance.text
+          + "<br>Travel Time: " + response.routes[0].legs[0].duration.text
+          + "<br>Trip Cost: $" + finalCost + "<br></div>");
 
         for (i = 0; i < legs.length; i++) {
           if (i == 0) {
             startLocation.latlng = legs[i].start_location;
             startLocation.address = legs[i].start_address;
-            // marker = google.maps.Marker({map:map,position: startLocation.latlng});
-            // marker = createMarker(legs[i].start_location, "start", legs[i].start_address, "green");
           }
           endLocation.latlng = legs[i].end_location;
           endLocation.address = legs[i].end_address;
@@ -111,8 +117,8 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         for (var i = 0; i < gmarkers.length; i++) {
           gmarkers[i].setMap(null);
         }
-        // gmarkers = [];
-        //321100 = about 200 miles
+
+        //321100 meters = about 200 miles
         var points = polyline.GetPointsAtDistance(321100);
         for (var i = 0; i < points.length; i++) {
           var marker = new google.maps.Marker({
@@ -122,7 +128,6 @@ function calculateAndDisplayRoute(directionsService, directionsDisplay) {
           });
           marker.addListener('click', openInfoWindow);
           gmarkers.push(marker);
-
         }
       }
     });
@@ -135,7 +140,6 @@ function createMarker(latlng, label, html, color) {
   var contentString = '<b>' + label + '</b><br>' + html;
   var marker = new google.maps.Marker({
     position: latlng,
-    // draggable: true, // this part is not working correctly
     map: map,
     icon: getMarkerImage(color),
     title: label,
@@ -166,8 +170,8 @@ function getMarkerImage(iconColor) {
     };
   }
   return icons[iconColor];
-
 }
+
 // SHOW LAT/ LONG AND DISTANCE FROM ORIGIN FOR EACH 200 MI POINT
 function openInfoWindow() {
   var contentString = this.getTitle() + "<br>" + this.getPosition().toUrlValue(6);
@@ -193,180 +197,158 @@ google.maps.Polyline.prototype.GetPointsAtDistance = function (miles) {
       var m = (next - olddist) / (dist - olddist);
       points.push(new google.maps.LatLng(p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m));
       next += miles;
-      /////////HHHEEEEEERRRRRRRRREEEEEE ARE THE LAT/ LONG COORDINATES YOU NEED FOR THE GAS API
-      // console.log(p1.lat() + (p2.lat() - p1.lat()) * m, p1.lng() + (p2.lng() - p1.lng()) * m)
     }
   }
 
-  // myGasFeed API  WORKING CODE
-  var gasLat = p1.lat() + (p2.lat() - p1.lat()) * m;//30.2672; // will call from google
-  var gasLng = p1.lng() + (p2.lng() - p1.lng()) * m; //-97.7431; // will call from google
-  var gasURL = "http://api.mygasfeed.com/stations/radius/" + gasLat + "/" + gasLng + "/5/reg/price/esmbi7wobr.json?";
-console.log(gasLat);
-console.log(gasLng);
+  // Create promise to push gas prices to DOM in correct order
+  var promises = [];
+  for (var i = 0; i < points.length; i++) {
+    // console.log(points[i].lat(), points[i].lng());
 
-  console.log(gasURL);
+    var gasLat = points[i].lat();
+    var gasLng = points[i].lng();
 
+    // Create myGasFeed API URL 
+    var gasURL = "http://api.mygasfeed.com/stations/radius/"
+      + gasLat + "/" + gasLng
+      + "/15/reg/price/esmbi7wobr.json?";
 
-  // var gasURL = "http:/api.mygasfeed.com/stations/radius/30.2672/-97.7431/5/reg/price/esmbi7wobr.json?";
-  
-  $.get(gasURL).then(data => {
-    //  console.log(JSON.stringify(data));
-    // console.log(data);
+    promises.push($.get(gasURL))
+  }
 
+  // For loop to append myGasFeed return to DOM
+  Promise.all(promises).then(function (ajaxResults) {
+    $('.spinner').addClass('hidden');
 
+    // console.log(ajaxResults);
+    for (var j = 0; j < ajaxResults.length; j++) {
+      if (ajaxResults[j].stations.length === 0) {
+        $("#gasStationsCard").append("<div class='info2'>This Stop Does Not Have Any Gas Stations");
+      }
+      else {
+        // store stuff in card = []
+        let ctn = $("<div class='info2'>")
+        for (let k = 0; k < 3; k++) {
+          let div = $("<div class='card-body style='width: 18rem;'><hr></div>")
+          if (ajaxResults[j].stations[k]) {
+            div.append(
+              ajaxResults[j].stations[k].station + "<br>" +
+              "Regular: $" + ajaxResults[j].stations[k].reg_price + "<br>" +
+              ajaxResults[j].stations[k].address + "<br>" +
+              ajaxResults[j].stations[k].city + ", " +
+              ajaxResults[j].stations[k].region)
 
-    // $("#drivingCard").html("<div class='alert-info'>From: " + document.getElementById("origin").value + ".<br />To: " + document.getElementById("destination").value + ".<br /> Driving distance: " + response.routes[0].legs[0].distance.text + ".<br />Duration: " + response.routes[0].legs[0].duration.text + ".</div>");
-
-    ///////////////////////////////////
-
-    $("#gasStationsCard").html("<div class='alert-info'>200 MILES" + "<br />Regular $" + data.stations[0].reg_price + "<br />" + data.stations[0].station + "<br />" + data.stations[0].address + "<br />" + data.stations[0].city + "," + data.stations[0].region + "</div>");
-
-
-
-    // $(".gasStuff").append(data.stations[0].station, data.stations[0].reg_price)
-    // data.stations[0].address + ".<br />", data.stations[0].city + ".<br />", data.stations[0].region + ".<br />", data.stations[0].distance)
-
-
-    // $(".gasStuff").append("<tr><td>" + data.stations[0].station + "</td><td>" + "$" + data.stations[0].reg_price + "</td><td>" + data.stations[0].address + "</td><td>" + data.stations[0].city + "," + data.stations[0].region + "</td><td>" + data.stations[0].distance + "</td></tr>")
-    // $(".gasStuff").append("<tr><td>" + data.stations[1].station + "</td><td>" + "$" + data.stations[1].reg_price + "</td><td>" + data.stations[1].address + "</td><td>" + data.stations[1].city + "," + data.stations[1].region + "</td><td>" + data.stations[1].distance + "</td></tr>")
-    // $(".gasStuff").append("<tr><td>" + data.stations[2].station + "</td><td>" + "$" + data.stations[2].reg_price + "</td><td>" + data.stations[2].address + "</td><td>" + data.stations[2].city + "," + data.stations[2].region + "</td><td>" + data.stations[2].distance + "</td></tr>")
-    //$("#info").text(JSON.stringify(data.stations[0].reg_price));
-    //console.log("country" + data.stations.zip);
-    //$("#info").text(JSON.stringify(data.stations[0].reg_price));
-    //console.log("country" + data.stations.zip);
-    //  console.log ("Gas Lat = " + gasLat)
-
-
-
-
-
-
-
-
-
-  });
+          }
+          ctn.append(div);
+        } // done with loop
+        ctn.append("<hr>");
+        $("#gasStationsCard").append(ctn);
+        // console.log(ctn);
+      }
+    }
+  })
   return points;
 }
 
-//Create autocomplete objects for inputs
+//CREATE AUTOCOMPLETE
 var options = {
   types: ['(cities)']
 }
 
 var input1 = document.getElementById("origin");
 var autocomplete1 = new google.maps.places.Autocomplete(input1, options);
-
 var input2 = document.getElementById("destination");
 var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
 
-
-//SKYPICKER API /////////////////////////////////////////
-// var originCity= Boston;
-// var destinationCity = Autin;
-// var dateFrom = 12/12/2018;
-// var dateTo = 24/12/2018;
-
-
-// const airURL = "https://api.skypicker.com/flights?flyFrom=" + originCity + "&to=Austin&dateFrom=24/11/2018&dateTo=24/12/2018&partner=picky";
-// function displayAirInfo () {
-
-//TESTING THESE URLS
-// const airURL = "https://api.skypicker.com/flights?flyFrom=Boston&to=Austin&dateFrom=24/11/2018&dateTo=24/12/2018&partner=picky";
-// var airURL = "https://api.skypicker.com/flights?flyFrom=${originCity}&to=${destinationCity}&dateFrom=${dateFrom}&dateTo=${dateTo}&partner=picky";
-// var airURL = "https://api.skypicker.com/flights?flyFrom=PRG&to=LGW&dateFrom=18/11/2018&dateTo=12/12/2018&partner=picky";
-// var airURL = "https://api.skypicker.com/flights?curr=USD&flyFrom=Boston&to=Austin&dateFrom=24/11/2018&dateTo=24/12/2018&partner=picky";
-
-
+// CREATE FUNCTION TO DISPLAY FLIGHT INFORMATION (SKYPICKER API)
 function displayAirInfo() {
   var originCity = document.getElementById("origin").value;
-  var destinationCity = document.getElementById("destination").value; // #destination
+  var destinationCity = document.getElementById("destination").value;
   var dateFrom = document.getElementById("depart").value;
-  // var dateTo = document.getElementById("return").value; 
-  // returns "value" of null
-  // var americanDateFormat = document.getElementById('#depart').datepicker(dateFormat: "mm/dd/yy").value;
-  // var americanDateFormat= DateTime dt = DateTime.Parse("depart", CultureInfo.GetCultureInfo("en-us"));
-  // var DateTime = DateTime.Parse("depart", CultureInfo.GetCultureInfo("en-gb"));
-  // function parseDMY(dateFrom) {
-  //   var date = dateFrom.split("/");
-  //   var d = parseInt(date[0], 10),
-  //       m = parseInt(date[1], 10),
-  //       y = parseInt(date[2], 10);
-  //   return new Date(y, m - 1, d);
-  // }
+  let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MMMM Do, YYYY");
 
-// let americanDateFormat = parseDMY(dateFrom);
+  const airURL =
+    "https://api.skypicker.com/flights?curr=USD&typeFlight=round&flyFrom=" + originCity
+    + "&to=" + destinationCity
+    + "&dateFrom=" + dateFrom
+    + "&dateTo=" + dateFrom
+    + "&partner=picky";
 
-
-// let americanDateFormat = moment(dateFrom.toString()).format("MM/DD/YYYY");
-
-// let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MM/DD/YYYY");
-let americanDateFormat = moment(dateFrom, 'DD/MM/YYYY').format("MMMM Do, YYYY");
-
-console.log(dateFrom);
-
-
-  const airURL = "https://api.skypicker.com/flights?curr=USD&typeFlight=round&flyFrom=" + originCity + "&to=" + destinationCity + "&dateFrom=" + dateFrom + "&dateTo=" + dateFrom + "&partner=picky";
-
-  console.log(airURL); 
-
-  // return airURL;
+  // Return json from Skypicker API;
   $.get(airURL).then(response => {
-console.log("I am in air Url",response)
 
+    // variables for IATA codes
+    airline0 = response.data[0].airlines[0];
+    airline1 = response.data[1].airlines[0];
+    airline2 = response.data[2].airlines[0];
+    departureAirport = response.data[0].flyFrom;
+    arrivalAirport = response.data[0].flyTo;
 
-    ////////////////////////////////////////////////
-    $("#flightResultsCard").html("<div class='alert-info'>Flight Results:" + "<br />Origin Airport:" + originCity + "<br />Destination Airport" + destinationCity + "<br />Departure Date:" + americanDateFormat + "<br /><br /> FIRST FLIGHT:<br />Flight price: USD $" + response.data[0].price + "<br />Travel Time: " + response.data[0].fly_duration + "<br />Airline: " + response.data[0].airlines + "<br /><br />SECOND FLIGHT:<br />Flight price: USD $" + response.data[1].price + "<br />Travel Time: " + response.data[1].fly_duration + "<br />Airline: " + response.data[1].airlines + "<br /> THIRD FLIGHT:<br /><br />Flight price: USD $" + response.data[2].price + "<br />Travel Time: " + response.data[2].fly_duration + "<br />Airline: " + response.data[2].airlines + "</div>");
+    //Return json file to convert airline code to airline name (airlines.json file)
+    const airlineJsonFile = "assets/airlines.json";
+    $.get(airlineJsonFile).then(results => {
 
-    ////////////////////////////////////////////////////////
+      airlineCodesJson = results;
+      airlineCode0 = airline0;
+      airlineCode1 = airline1;
+      airlineCode2 = airline2;
+      departureCode = departureAirport;
+      arrivalCode = arrivalAirport;
 
-
-    // /////////////////////////////////////////////
-    // console.log("Function:" + parseDMY(dateFrom));
-    console.log("American Date:" + americanDateFormat);
-    console.log("Routes: " + response.data[0].routes);
-    console.log("Transfers: " + response.data[0].transfers);
-    console.log("Fly from: " + response.data[0].flyFrom);
-    console.log("Fly to: " + response.data[0].flyTo);
-    console.log("From: " + originCity);
-    console.log("To: " + destinationCity);
-    console.log("Departure Date:  " + dateFrom);
-    // First flight
-    console.log("Flight price: USD $" + response.data[0].price);
-    console.log("Travel Time: " + response.data[0].fly_duration);
-    console.log("Airline: " + response.data[0].airlines);
-    //Second flight
-    console.log("Flight price: USD $" + response.data[1].price);
-    console.log("Travel Time: " + response.data[1].fly_duration);
-    console.log("Airline: " + response.data[1].airlines);
-    //Third flight
-    console.log("Flight price: USD $" + response.data[2].price);
-    console.log("Travel Time: " + response.data[2].fly_duration);
-    console.log("Airline: " + response.data[2].airlines);
-  
+      // Writes results to DOM
+      $("#flightResultsCard").html("<div class='info'>"
+        + "<br>Startin':  " + findByCode(departureCode, null, null, null, null, airlineCodesJson)
+        + "<br>Going':  " + findByCode(null, arrivalCode, null, null, null, airlineCodesJson)
+        + "<br>Leavin':  " + americanDateFormat
+        + "<br><hr>Airline: " + findByCode(null, null, airlineCode0, null, null, airlineCodesJson)
+        + "<br>Flight price: USD $" + response.data[0].price
+        + "<br>Travel Time: " + response.data[0].fly_duration
+        + "<br><a href='" + response.data[0].deep_link + "'><button>Purchase</button></a>"
+        + "<br><hr>Airline: " + findByCode(null, null, null, airlineCode1, null, airlineCodesJson)
+        + "<br>Flight price: USD $" + response.data[1].price
+        + "<br>Travel Time: " + response.data[1].fly_duration
+        + "<br><a href='" + response.data[1].deep_link + "'><button>Purchase</button></a>"
+        + "<br><hr>Airline: " + findByCode(null, null, null, null, airlineCode2, airlineCodesJson)
+        + "<br>Flight price: USD $" + response.data[2].price
+        + "<br>Travel Time: " + response.data[2].fly_duration
+        + "<br><a href='" + response.data[2].deep_link + "'><button>Purchase</button></a></div>");
+    });
   });
+
+  function findByCode(departureCode, arrivalCode, airlineCode0, airlineCode1, airlineCode2, json) {
+    if (departureCode) {
+      for (let i = 0; i < json.length; i++) {
+        if (departureCode === json[i].airport.code) {
+          return json[i].airport.name
+        }
+      }
+    } else if (arrivalCode) {
+      for (let i = 0; i < json.length; i++) {
+        if (arrivalCode === json[i].airport.code) {
+          return json[i].airport.name
+        }
+      }
+    } else if (airlineCode0) {
+      for (let i = 0; i < json.length; i++) {
+        if (airlineCode0 === json[i].carrier.code) {
+          return json[i].carrier.name
+        }
+      }
+    } else if (airlineCode1) {
+      for (let i = 0; i < json.length; i++) {
+        if (airlineCode1 === json[i].carrier.code) {
+          return json[i].carrier.name
+        }
+      }
+    } else if (airlineCode2) {
+      for (let i = 0; i < json.length; i++) {
+        if (airlineCode2 === json[i].carrier.code) {
+          return json[i].carrier.name
+        }
+      }
+    }
+  }
 }
-
-
-// $.get(airURL).then( response => {
-  //  console.log(response);
-  //  console.log(response.data[0]);
-  //  console.log(response.data[1]);
-  //  console.log(response.data[2]);
-  //  console.log(airURL);
-  //  $(".airStuff").append("<tr><td>" + response.data[0].duration.fly_duration + "</td></tr>")
-  //  + "</td><td>" + "$" + data.stations[0].reg_price + "</td><td>" + data.stations[0].address + "</td><td>" + data.stations[0].city + "," + data.stations[0].region + "</td><td>" + data.stations[0].distance + "</td></tr>")
-
-// });
-// }
-
-
-
-
-
-
-
-
 
 
 

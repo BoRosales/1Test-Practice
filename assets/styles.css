@@ -1,27 +1,104 @@
-body{
-    background-image: url('../assets/images/travelbackground.JPG');
-    background-repeat: no-repeat;
-    background-size: 100% 70%;
-  }
-
-form{
-    width: 70%;
-    margin: 100px auto;
+body { 
+    background-color: #137b85; 
+    color: #222; 
 }
 
-button{
+#navbar .logoimage{
+    margin-left: 20px;
+}
+
+.jumboHeaderImg{
+    background-image: url('../assets/images/travelbackground.JPG');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: black;
+}
+
+.jumbotron-fluid {
+    margin: 0;
+    padding: 2%;
+}
+
+.card {
+    margin: 2%;
+}
+
+.card-header {
+    text-align: center;
+}
+
+#centerButtons {
+    display: flex; 
+    justify-content: center;
+}
+
+button {
     margin: 10px;
+    border-radius: 3px;
 }
 
 #map {
-    width: 50%;
-    height: 50%;
-    margin: 10px auto;
+    width: 70%;
+    height: 50%; 
+    margin: auto;
+    box-shadow: 10px 10px 10px;
 }
 
-/*Driving time and distance box*/
 #output {
     text-align: center;
     margin: 20px auto;
 }
 
+.info2 {
+    display: flex;
+}
+
+/* Spinner*/ 
+.spinner {
+    align-content: center;
+    text-align: center; 
+}
+
+#container2{
+    margin: 0.5% auto;
+    float: none;
+    width: 50%;
+    border: transparent;
+
+}
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+
+h1 {
+    text-align:center; 
+    font: 2em 'Roboto', sans-serif;
+}
+
+hh1 {
+    text-align:center; 
+    font: 2em 'Roboto', sans-serif;
+}
+
+.loading {
+    background-color: #137b85; 
+    text-align:center; 
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    -webkit-animation: spin 1s ease-in-out infinite;
+}
+.hidden{
+    text-align:center; 
+    display: none;
+}
+
+@keyframes spin {
+ to { -webkit-transform: rotate(360deg); }
+}
+
+@-webkit-keyframes spin {
+ to { -webkit-transform: rotate(360deg); }
+}
