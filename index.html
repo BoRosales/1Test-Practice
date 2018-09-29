@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
 
-    <!--Firebase-->
-
     <!--CSS/Styling-->
     <link rel="stylesheet" type="text/css" screen="media" href="assets/styles.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.8.23/themes/smoothness/jquery-ui.css">
@@ -18,101 +16,104 @@
 <!--DOM-->
 
 <body>
-
     <div id="container">
         <!--Nav Bar-->
         <div>
-            <nav class="navbar sticky-top navbar-light" style="background-color: #372581;">
+            <nav id="navbar" class="sticky-top navbar-light" style="background-color: #372581;">
                 <a class="navbar-brand" href="#">
-                    <img src="assets/images/11.JPG">
+                    <img class="logoimage" src="assets/images/14.jpg">
                 </a>
             </nav>
         </div>
 
-        <!--Round trip or One way buttons-->
-        <form action="" method="post">
-            <!-- <div class="trip-type-selection">
-                <button class="trip-type" type="button" data-type="round-trip">
-                    Round Trip
-                </button>
-                <button class="trip-type" type="button" data-type="one-way">
-                    One Way
-                </button> -->
-            <!-- </div> -->
-
-            <!--Origin and Desination inputs-->
-            <div class="form-row">
-                <div class="trip-row">
-                    <input type="text" id="origin" placeholder="Where ya starting">
-                    <input type="text" id="destination" placeholder="Where ya goin">
-                    <input type="text" id="depart" placeholder="Depart">
-                    <!-- <input type="text" id="return" placeholder="Return"> -->
+        <div class="jumbotron jumbotron-fluid jumboHeaderImg">
+            <div class="container">
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Search Trips</div>
+                    <div class="card-body">
+                        <div class="card">
+                            <ul class="list-group list-group-flush">
+                                <!--Round trip or One way buttons-->
+                                <li class="list-group-item"><input type="text" id="origin" placeholder="Where ya startin'?"></li>
+                                <li class="list-group-item"><input type="text" id="destination" placeholder="Where ya goin'?"></li>
+                                <li class="list-group-item"><input type="text" id="depart" placeholder="When ya goin'?"></li>
+                            </ul>
+                        </div>
+                        <div id="centerButtons">
+                            <button id="searchAround">Search</button>
+                            <!-- Button HTML (to Trigger Modal) -->
+                            <button id="modalButton" a href="#myModal" role="button" data-toggle="modal">Read Me</a></button>
+                            <!-- Modal HTML -->
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Is it cheaper to fly or drive? Trip Around knows!</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Enter where ya startin', where ya goin', and when ya' want to go. Trip
+                                                Around will display a driving route, calculate your driving cost
+                                                (based on 25 mpg and the national average gas price), then compare the
+                                                road trip cost to real-time airfare costs. If your route does not start or end close to an airport then no flight results will show.
+                                                <p> Will you choose to drive? Choose your gas stops based on
+                                                    real-time gas prices.</p>
+                                                <p>Will you choose to fly? Book your trip through the app!</p>
+                                                <p>Trip around!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-
-        <!-- Search button (must be outside of form and in it's own div) -->
-        <div>
-            <button id="searchAround">Search Around</button>
         </div>
+    </div><!-- CLOSES CONTAINER1 -->
 
-        <!-- Map Div -->
+    <!-- Driving Time and Distance Results  Div-->
+    <div id="container2" class="card" style="width: 18rem;">
+        <div class="card-body spinner hidden">
+            <h1>Loading Results</h1>
+            <h5>Don't forget your toothbrush!</h5>
+            <div class="
+            loading"></div>
+        </div>
+    </div>
+
+    <div id="container3">
         <div id="map"></div>
+    </div>
 
-        <!-- Driving Time and Distance Results  Div-->
-        <div class="card">
-            <div id="drivingCard"></div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gas Search Results</h5>
+                    <div id="drivingCard"></div>
+                    <div id="gasStationsCard"></div>
+                </div>
+            </div>
         </div>
-
-        <!-- Gas Stations Div -->
-        <div class="card">
-            <div id="gasStationsCard"></div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Flight Search Results</h5>
+                    <div id="flightResultsCard"></div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Flight Results Div -->
-        <div class="card">
-            <div id="flightResultsCard"></div>
-        </div>
-
-        <!--PROBABLY EXTRA, MIGHT CHANGE CARD TO POPULATE IN TABLE ----------------------------------------------------------------->
-        <!-- Gas Search Table -->
-        <!-- <div id="info">
-            <table class="table table-dark" style="background-color: #372581">
-                <thead>
-                    <tr>
-                        <th scope="col">Station Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Street Address</th>
-                        <th scope="col">City, State</th>
-                        <th scope="col">Distance</th>
-                    </tr>
-                </thead>
-                <tbody class="gasStuff">
-
-                </tbody>
-            </table>
-        </div> -->
-
-        <!-- Gas Search Div -->
-        <!-- <div id="info">
-            <table class="table table-dark" style="background-color: #20cc3c">
-                <thead>
-                    <tr>
-                        <th scope="col">Flight Length</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Street Address</th>
-                        <th scope="col">City, State</th>
-                        <th scope="col">Distance</th>
-                    </tr>
-                </thead>
-                <tbody class="airStuff">
-
-                </tbody>
-            </table>
-        </div> -->
-
-
-    </div> <!-- CLOSES CONTAINER -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 
     <!-- Scripts for APIS -->
     <!-- GOOGLE MAPS PLACES (distance between cites, lat/long, autocomplete form fields) -->
@@ -125,7 +126,37 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!-- Moment -->
     <script src="https://cdn.jsdelivr.net/momentjs/2.13.0/moment.min.js"></script>
+
     <script src="assets/travel.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!-- Scripts for APIS -->
+<!-- GOOGLE MAPS PLACES (distance between cites, lat/long, autocomplete form fields) -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBfd54qyD2BoEk1fzXahImKNPT_KTW4SA&libraries=places"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+
+<!--Jquery -- Date Picker & Date Picker UI-->
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	 crossorigin="anonymous"></script> -->
+<!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+<!-- Moment -->
+<!-- <script src="https://cdn.jsdelivr.net/momentjs/2.13.0/moment.min.js"></script>
+
+    <script src="assets/travel.js"></script>
+
 </body>
 
-</html>
+</html> -->
